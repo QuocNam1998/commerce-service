@@ -1,6 +1,7 @@
-import serverless from "serverless-http";
 import { createApp } from "../src/app.js";
 
 const app = createApp();
 
-export default serverless(app);
+export default function handler(request: Parameters<typeof app>[0], response: Parameters<typeof app>[1]) {
+  return app(request, response);
+}

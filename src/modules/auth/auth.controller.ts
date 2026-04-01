@@ -13,6 +13,10 @@ import {
   registerSchema
 } from "./auth.validation.js";
 
+function getSessionSameSitePolicy() {
+  return env.NODE_ENV === "production" ? "None" : "Lax";
+}
+
 function appendSessionCookie(response: Response, sessionToken: string, expiresAt: string) {
   response.append(
     "Set-Cookie",
@@ -20,7 +24,7 @@ function appendSessionCookie(response: Response, sessionToken: string, expiresAt
       expires: new Date(expiresAt),
       httpOnly: true,
       path: "/",
-      sameSite: "Lax",
+      sameSite: getSessionSameSitePolicy(),
       secure: env.NODE_ENV === "production"
     })
   );
@@ -73,7 +77,7 @@ export async function handleLogout(request: Request, response: Response, next: N
         expires: new Date(0),
         httpOnly: true,
         path: "/",
-        sameSite: "Lax",
+        sameSite: getSessionSameSitePolicy(),
         secure: env.NODE_ENV === "production"
       })
     );
